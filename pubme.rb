@@ -23,9 +23,7 @@ Telegram::Bot::Client.run(telegram_token) do |bot|
         bot.api.answer_inline_query(inline_query_id: message.id, results: results)
       else
         places = GooglePlaces::Client.new(google_api_key)
-        results = places.spots(message.location.latitude, message.location.longitude, :radius => 500, :types => 'bar', :rankby => 'distance')
-        results.delete_if {|bar| bar.types.include? 'restaurant'}
-        puts results.length
+        results = places.spots(message.location.latitude, message.location.longitude, :radius => 500, :types => 'bar', :exclude => 'restaurant', :rankby => 'distance')
         if results.length == 0
           msg_content = Telegram::Bot::Types::InputTextMessageContent.new(
             message_text: 'No results found in your vicinity'
@@ -39,8 +37,7 @@ Telegram::Bot::Client.run(telegram_token) do |bot|
           results = [ msg ]
           bot.api.answer_inline_query(inline_query_id: message.id, results: results)
         else
-          results = results.map.with_index do |bar, index|
-          puts "hello"
+          results.map!.with_index do |bar, index|
             Telegram::Bot::Types::InlineQueryResultVenue.new(
               type: 'venue',
               id: index,
@@ -50,8 +47,6 @@ Telegram::Bot::Client.run(telegram_token) do |bot|
               address: bar.vicinity
             )
           end
-          puts message.id
-          puts results
           bot.api.answer_inline_query(inline_query_id: message.id, results: results)
         end
       end
