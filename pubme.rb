@@ -55,7 +55,7 @@ def respond_message(bot, message)
     begin
       kb = [Telegram::Bot::Types::KeyboardButton.new(text: 'Send Location', request_location: true)]
       markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, resize_keyboard: true, one_time_keyboard: true)
-      bot.api.send_message(chat_id: message.chat.id, text: 'A hoy hoy', reply_markup: markup)
+      bot.api.send_message(chat_id: message.chat.id, text: 'Send location', reply_markup: markup)
     rescue Telegram::Bot::Exceptions::ResponseError => e
       result = "Sorry I can't request your location in a group chat. Specify a location, e.g. '/pubme brixton', or call @pubme_bot inline from anywhere."
     end
