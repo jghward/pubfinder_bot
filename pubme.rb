@@ -62,7 +62,7 @@ def respond_message(bot, message)
   when /^\/pubme\s+(.*)$/
     result = return_random_pub(by_query: true, query_string: "pubs in #{$1}")
   end
-  if message.location
+  if message.location && message.reply_to_message
     result = return_random_pub(location: message.location)
   end
   case result
